@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const url = import.meta.env.BASE_URL
-
+const url = import.meta.env.VITE_BASE_URL
+console.log(url, '====url')
 const axiosInstance = axios.create({
   baseURL: url,
   timeout: 60000,

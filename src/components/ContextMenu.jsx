@@ -49,7 +49,6 @@ const ContextMenu = ({ anchorEl, setAnchorEl }) => {
                 key={profile.item}
                 onClick={() => {
                   profile?.trigger === 'logout' && logout()
-                  navigate('/login')
                 }}
               >
                 {profile?.item}

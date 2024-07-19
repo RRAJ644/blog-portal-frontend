@@ -35,13 +35,20 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post('/login', {
-        email,
-        password,
-      })
-      localStorage.setItem('token', response?.data?.token)
-      setUser(response?.data?.user)
-      setIsAuthenticated(true)
+      const response = await axiosInstance
+        .post('/login', {
+          email,
+          password,
+        })
+        .then((response) => {
+          localStorage.setItem('token', response?.data?.token)
+          setUser(response?.data?.user)
+          setIsAuthenticated(true)
+          navigate('/dashboard')
+        })
+        .catch((err) => {
+          navigate('/login')
+        })
     } catch (error) {
       console.error('Failed to login', error)
       throw error
@@ -52,6 +59,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token')
     setUser(null)
     setIsAuthenticated(false)
+    navigate('/login')
   }
 
   return (
