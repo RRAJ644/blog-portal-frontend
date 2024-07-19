@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { TextField, Button, Container, Typography, Box } from '@mui/material'
 import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -16,6 +18,11 @@ const Login = () => {
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.')
     }
+  }
+  
+  const handleLogin = async () => {
+    login()
+    navigate('/dashboard')
   }
 
   return (
@@ -28,7 +35,7 @@ const Login = () => {
           alignItems: 'center',
         }}
       >
-        <Typography  component='h1' variant='h5'>
+        <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
         <Box component='form' onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -66,6 +73,7 @@ const Login = () => {
             fullWidth
             variant='contained'
             sx={{ mt: 3, mb: 2 }}
+            onClick={handleLogin}
           >
             Sign In
           </Button>

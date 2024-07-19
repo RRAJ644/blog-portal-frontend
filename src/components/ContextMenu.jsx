@@ -5,9 +5,11 @@ import MenuItem from '@mui/material/MenuItem'
 import profile from '../assets/profile.png'
 import { PROFILE_MENU } from '../data'
 import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const ContextMenu = ({ anchorEl, setAnchorEl }) => {
   const { logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -47,6 +49,7 @@ const ContextMenu = ({ anchorEl, setAnchorEl }) => {
                 key={profile.item}
                 onClick={() => {
                   profile?.trigger === 'logout' && logout()
+                  navigate('/login')
                 }}
               >
                 {profile?.item}
