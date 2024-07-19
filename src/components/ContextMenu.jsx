@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Popover from '@mui/material/Popover'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import MenuItem from '@mui/material/MenuItem'
@@ -6,10 +6,14 @@ import profile from '../assets/profile.png'
 import { PROFILE_MENU } from '../data'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import ChangePassword from './ChangePassword' // Adjust the path as necessary
 
 const ContextMenu = ({ anchorEl, setAnchorEl }) => {
   const { logout } = useAuth()
-  const navigate = useNavigate()
+  const [openModal, setOpenModal] = useState(false)
+
+  const handleOpenModal = () => setOpenModal(true)
+  const handleCloseModal = () => setOpenModal(false)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -21,6 +25,15 @@ const ContextMenu = ({ anchorEl, setAnchorEl }) => {
 
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
+
+  const handleMenuClick = (trigger) => {
+    handleClose() // Close the popover
+    if (trigger === 'logout') {
+      logout()
+    } else if (trigger === 'changePassword') {
+      handleOpenModal()
+    }
+  }
 
   return (
     <div>
@@ -47,9 +60,7 @@ const ContextMenu = ({ anchorEl, setAnchorEl }) => {
             {PROFILE_MENU?.map((profile) => (
               <MenuItem
                 key={profile.item}
-                onClick={() => {
-                  profile?.trigger === 'logout' && logout()
-                }}
+                onClick={() => handleMenuClick(profile?.trigger)}
               >
                 {profile?.item}
               </MenuItem>
@@ -57,6 +68,8 @@ const ContextMenu = ({ anchorEl, setAnchorEl }) => {
           </div>
         </ClickAwayListener>
       </Popover>
+
+      <ChangePassword open={openModal} handleClose={handleCloseModal} />
     </div>
   )
 }
