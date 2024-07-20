@@ -10,6 +10,8 @@ import Layout from './layout/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import { AuthProvider } from './context/AuthContext'
+import Write from './pages/Write'
+import { EditorProvider } from './context/EditorContext'
 
 // const router = createBrowserRouter([
 //   {
@@ -45,18 +47,29 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/login' element={<Login />} />
-          <Route
-            path='/dashboard'
-            element={
-              <Layout>
-                <Home />
-              </Layout>
-            }
-          />
-        </Routes>
+        <EditorProvider>
+          <Routes>
+            <Route path='/' element={<Login />} />
+            <Route path='/login' element={<Login />} />
+            <Route
+              path='/dashboard'
+              element={
+                <Layout>
+                  <Home />
+                </Layout>
+              }
+            />
+
+            <Route
+              path='/write'
+              element={
+                <Layout>
+                  <Write />
+                </Layout>
+              }
+            ></Route>
+          </Routes>
+        </EditorProvider>
       </AuthProvider>
     </Router>
   )

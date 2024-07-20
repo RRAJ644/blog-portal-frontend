@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
         .then((response) => {
           setUser(response.data.user)
           setIsAuthenticated(true)
-          navigate('/dashboard')
         })
         .catch(() => {
           localStorage.removeItem('token')

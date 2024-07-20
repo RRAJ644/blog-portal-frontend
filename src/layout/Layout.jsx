@@ -3,13 +3,19 @@ import { Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { NAV_ITEMS } from '../data'
 import ContextMenu from '../components/ContextMenu'
+import { useNavigate } from 'react-router-dom'
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+  const navigate = useNavigate()
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
+  }
+
+  const handleRedirects = (trigger) => {
+    navigate(`/${trigger}`)
   }
 
   return (
@@ -33,11 +39,15 @@ const Layout = ({ children }) => {
             className='flex items-center flex-col bg-gray-800 h-full'
             sx={{ paddingTop: '4rem' }}
           >
-            {NAV_ITEMS.map((item, index) => (
-              <ListItem key={index} className='w-full'>
+            {NAV_ITEMS.map((link, index) => (
+              <ListItem
+                key={index}
+                className='w-full'
+                onClick={() => handleRedirects(link.trigger)}
+              >
                 <ListItemText
                   className='w-full text-white pl-12 cursor-pointer'
-                  primary={<span className='text-2xl'>{item}</span>}
+                  primary={<span className='text-2xl'>{link.item}</span>}
                 />
               </ListItem>
             ))}
