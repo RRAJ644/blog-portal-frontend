@@ -32,16 +32,16 @@
 
 // export default Write
 
-
 import React from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEditor } from '../context/EditorContext'
+import { Button } from '@mui/material'
 
 // Custom toolbar options
 const toolbarOptions = {
   toolbar: [
-    [{ 'font': ['sans-serif', 'serif', 'monospace'] }],
+    [{ font: ['sans-serif', 'serif', 'monospace'] }],
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['bold', 'italic', 'underline'],
@@ -56,13 +56,17 @@ const Write = () => {
   const { editorContent, setEditorContent } = useEditor()
 
   return (
-    <ReactQuill
-      theme='snow'
-      value={editorContent}
-      onChange={setEditorContent}
-      modules={toolbarOptions}
-      placeholder='Write something amazing...'
-    />
+    <div className='border-2'>
+      <ReactQuill
+        theme='snow'
+        value={editorContent}
+        onChange={setEditorContent}
+        modules={toolbarOptions}
+        placeholder='Write something amazing...'
+      />
+
+      <Button>Save</Button>
+    </div>
   )
 }
 

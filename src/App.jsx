@@ -1,47 +1,13 @@
 import React from 'react'
-import {
-  RouterProvider,
-  createBrowserRouter,
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from 'react-router-dom'
+import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
 import Layout from './layout/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import { AuthProvider } from './context/AuthContext'
 import Write from './pages/Write'
 import { EditorProvider } from './context/EditorContext'
-
-// const router = createBrowserRouter([
-//   {
-//     children: [
-//       { path: '/login', element: <Login /> },
-//       {
-//         path: '/dashboard',
-//         element: (
-//           <Layout>
-//             <Home />
-//           </Layout>
-//         ),
-//       },
-//       {
-//         path: '/',
-//         element: <Login />,
-//       },
-//     ],
-//   },
-// ])
-
-// const App = () => {
-//   return (
-//     <AuthProvider>
-//       <RouterProvider router={router} />
-//     </AuthProvider>
-//   )
-// }
-
-// export default App
+import Published from './pages/Published'
+import Drafts from './pages/Drafts'
 
 const App = () => {
   return (
@@ -51,23 +17,10 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Login />} />
             <Route path='/login' element={<Login />} />
-            <Route
-              path='/dashboard'
-              element={
-                <Layout>
-                  <Home />
-                </Layout>
-              }
-            />
-
-            <Route
-              path='/write'
-              element={
-                <Layout>
-                  <Write />
-                </Layout>
-              }
-            ></Route>
+            <Route path='/dashboard' element={<Layout><Home /></Layout>}/>
+            <Route path='/write' element={<Layout><Write /></Layout>} />
+            <Route path='/published' element={<Layout> <Published /> </Layout>} />
+            <Route path='/drafts' element={<Layout><Drafts /></Layout>} />
           </Routes>
         </EditorProvider>
       </AuthProvider>
