@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEditor } from '../context/EditorContext'
-import { Button } from '@mui/material'
+import { Button, Tabs, Tab } from '@mui/material'
+import Preview from './Preview'
 
 const modules = {
   toolbar: [
@@ -47,9 +48,14 @@ const formats = [
 const Write = () => {
   const { editorContent, setEditorContent } = useEditor()
   const [content, setContent] = useState('')
+  const [tabIndex, setTabIndex] = useState(0)
 
   const handleSave = () => {
     setContent(editorContent)
+  }
+
+  const handleTabChange = (event, newIndex) => {
+    setTabIndex(newIndex)
   }
 
   useEffect(() => {
@@ -109,18 +115,42 @@ const Write = () => {
   }, [editorContent])
 
   return (
-    <div className='border-2'>
-      <ReactQuill
-        theme='snow'
-        value={editorContent}
-        onChange={setEditorContent}
-        modules={modules}
-        formats={formats}
-        // className='prose'
-      />
-      <Button onClick={handleSave}>Save</Button>
-      {content.length > 0 && <div>{content}</div>}
-    </div>
+    <section className='flex flex-col items-center h-screen'>
+      <Tabs
+        value={tabIndex}
+        onChange={handleTabChange}
+        centered
+        className='mb-10 border-2 border-gray-500 w-fit text-black px-10 rounded-full '
+      >
+        <Tab label='Write' />
+        <Tab label='Preview' />
+      </Tabs>
+
+      {tabIndex === 0 && (
+        <div className='border-2 border-gray-400 w-full'>
+          <ReactQuill
+            theme='snow'
+            value={editorContent}
+            onChange={setEditorContent}
+            modules={modules}
+            formats={formats}
+          />
+          <Button onClick={handleSave}>Save</Button>
+        </div>
+      )}
+
+      {tabIndex === 1 && (
+        <div className='border-2 border-gray-400 flex-1 w-full'>
+          {content.length > 0 ? (
+            <Preview content={content} />
+          ) : (
+            <p className='text-gray-500'>
+              Write in editor and save to preview...{' '}
+            </p>
+          )}
+        </div>
+      )}
+    </section>
   )
 }
 
