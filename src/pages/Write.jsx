@@ -135,13 +135,18 @@ const Write = () => {
             modules={modules}
             formats={formats}
           />
-          <Button onClick={handleSave}>Save</Button>
+
+          {editorContent.length > 0 &&
+            editorContent !==
+              '<p class="prose-customParagraph max-lg:text-xl max-sm:text-lg"><br></p>' && (
+              <Button onClick={() => handleSave()}>Save</Button>
+            )}
         </div>
       )}
 
       {tabIndex === 1 && (
         <div className='border-2 border-gray-400 flex-1 w-full'>
-          {content.length > 0 ? (
+          {content?.trim()?.length > 0 ? (
             <Preview content={content} />
           ) : (
             <p className='text-gray-500'>
