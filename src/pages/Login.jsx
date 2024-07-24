@@ -8,14 +8,12 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const { login } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target

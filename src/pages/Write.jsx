@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEditor } from '../context/EditorContext'
-import { Button, Tabs, Tab } from '@mui/material'
+import { Button, Tabs, Tab, TextField } from '@mui/material'
 import Preview from './Preview'
+import axiosInstance from '../utils/axiosInstance'
 
 const modules = {
   toolbar: [
@@ -45,102 +46,178 @@ const formats = [
   'video',
 ]
 
+const applyCustomClasses = (selector, classNames) => {
+  const elements = document.querySelectorAll(selector)
+  elements.forEach((element) => {
+    classNames.forEach((className) => {
+      element.classList.add(className)
+    })
+  })
+}
+
 const Write = () => {
   const { editorContent, setEditorContent } = useEditor()
   const [content, setContent] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
+  const [title, setTitle] = useState('')
+  const [slug, setSlug] = useState('')
+  const [thumbnail, setThumbnail] = useState(null)
+  const [thumbnailPreview, setThumbnailPreview] = useState(null)
 
   const handleSave = () => {
+    const formData = new FormData()
+    formData.append('content', editorContent)
+    formData.append('title', title)
+    formData.append('slug', slug)
+    if (thumbnail) {
+      formData.append('thumbnail', thumbnail)
+    }
     setContent(editorContent)
+  }
+
+  const handleSaveAsDraft = async () => {
+    const formData = new FormData()
+    formData.append('content', editorContent)
+    formData.append('title', title)
+    formData.append('slug', slug)
+    if (thumbnail) {
+      formData.append('thumbnail', thumbnail)
+    }
+
+    try {
+      const response = await axiosInstance.post('/save-as-draft', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      console.log('Draft saved:', response.data)
+    } catch (error) {
+      console.error('Error saving draft:', error)
+    }
+  }
+
+  const handlePublish = async () => {
+    const formData = new FormData()
+    formData.append('content', editorContent)
+    formData.append('title', title)
+    formData.append('slug', slug)
+    if (thumbnail) {
+      formData.append('thumbnail', thumbnail)
+    }
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+
+    try {
+      const response = await axiosInstance.post('/publish', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      console.log('Published: ', response.data)
+    } catch (error) {
+      console.error('Error Publishing draft:', error)
+    }
   }
 
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex)
   }
 
+  const handleThumbnailChange = (event) => {
+    const file = event.target.files[0]
+    setThumbnail(file)
+    if (file) {
+      setThumbnailPreview(URL.createObjectURL(file))
+    }
+  }
+
+  const handleRemoveThumbnail = () => {
+    setThumbnail(null)
+    setThumbnailPreview(null)
+  }
+
   useEffect(() => {
     const quillEditor = document.querySelector('.ql-editor')
     if (quillEditor) {
-      quillEditor.classList.add(
+      applyCustomClasses('.ql-editor', [
         'prose-customParagraph',
         'max-lg:text-xl',
-        'max-sm:text-lg'
-      )
-      // Add custom styles for headings
-      const headings = quillEditor.querySelectorAll('h2')
-      headings.forEach((heading) => {
-        heading.classList.add(
-          'prose-customHeading',
-          'max-lg:text-center',
-          'max-lg:text-2xl',
-          'max-sm:text-xl'
-        )
-      })
-
-      const headings3 = quillEditor.querySelectorAll('h3')
-      headings3.forEach((heading) => {
-        heading.classList.add(
-          'prose-customHeading',
-          'max-lg:text-center',
-          'max-lg:text-2xl',
-          'max-sm:text-xl'
-        )
-      })
-
-      // Add custom styles for paragraphs
-      const paragraphs = quillEditor.querySelectorAll('p')
-      paragraphs.forEach((paragraph) => {
-        paragraph.classList.add(
-          'prose-customParagraph',
-          'max-lg:text-xl',
-          'max-sm:text-lg'
-        )
-      })
-      // Add custom styles for list items
-      const listItems = quillEditor.querySelectorAll('li')
-      listItems.forEach((li) => {
-        li.classList.add(
-          'prose-customParagraph',
-          'max-lg:text-xl',
-          'max-sm:text-lg'
-        )
-      })
-
-      //Add for image
-      const images = quillEditor.querySelectorAll('img')
-      images.forEach((img) => {
-        img.classList.add('mx-auto', 'block')
-      })
+        'max-sm:text-lg',
+      ])
+      applyCustomClasses('h2, h3', [
+        'prose-customHeading',
+        'max-lg:text-center',
+        'max-lg:text-2xl',
+        'max-sm:text-xl',
+      ])
+      applyCustomClasses('p, li', [
+        'prose-customParagraph',
+        'max-lg:text-xl',
+        'max-sm:text-lg',
+      ])
+      applyCustomClasses('img', ['mx-auto', 'block'])
     }
   }, [editorContent])
 
   return (
-    <section className='flex flex-col items-center h-screen'>
+    <section className='flex flex-col items-center h-screen w-full'>
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
         centered
-        className='mb-10 border-2 border-gray-500 w-fit text-black px-10 rounded-full '
+        className='mb-10 border-2 border-gray-500 w-fit text-black px-10 rounded-full'
       >
         <Tab label='Write' />
         <Tab label='Preview' />
       </Tabs>
 
       {tabIndex === 0 && (
-        <div className='border-2 border-gray-400 w-full'>
+        <div className='w-full flex gap-y-6 flex-col'>
+          <TextField
+            label='Title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label='Slug'
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            fullWidth
+          />
+          <input
+            type='file'
+            accept='image/*'
+            onChange={handleThumbnailChange}
+            className='w-fit'
+          />
+          {thumbnailPreview && (
+            <div className='mb-4 flex items-center flex-col gap-y-4'>
+              <img
+                src={thumbnailPreview}
+                alt='Thumbnail Preview'
+                className='max-h-48 object-contain border-2'
+              />
+              <Button
+                onClick={handleRemoveThumbnail}
+                variant='outlined'
+                color='error'
+                className='ml-4'
+              >
+                Remove
+              </Button>
+            </div>
+          )}
           <ReactQuill
             theme='snow'
             value={editorContent}
             onChange={setEditorContent}
             modules={modules}
             formats={formats}
+            className='w-full'
           />
-
-          {editorContent.length > 0 &&
-            editorContent !==
-              '<p class="prose-customParagraph max-lg:text-xl max-sm:text-lg"><br></p>' && (
-              <Button onClick={() => handleSave()}>Save</Button>
-            )}
         </div>
       )}
 
@@ -150,11 +227,31 @@ const Write = () => {
             <Preview content={content} />
           ) : (
             <p className='text-gray-500'>
-              Write in editor and save to preview...{' '}
+              Write in editor and save to preview...
             </p>
           )}
         </div>
       )}
+
+      <div className='fixed bottom-4 right-4 space-x-4'>
+        {editorContent.trim() &&
+          editorContent !==
+            '<p class="prose-customParagraph max-lg:text-xl max-sm:text-lg"><br></p>' && (
+            <>
+              <Button onClick={handleSave} variant='contained'>
+                Save
+              </Button>
+
+              <Button onClick={handleSaveAsDraft} variant='contained'>
+                Save as Draft
+              </Button>
+
+              <Button onClick={handlePublish} variant='contained'>
+                Publish
+              </Button>
+            </>
+          )}
+      </div>
     </section>
   )
 }
