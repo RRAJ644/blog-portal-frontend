@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import BlogCard from '../components/BlogCard'
-
 const Published = () => {
   const [published, setPublished] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+
 
   useEffect(() => {
     const getPublished = async () => {

@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 const BlogCard = ({
   thumbnail,
   date,
@@ -6,7 +7,11 @@ const BlogCard = ({
   tag,
   index,
   slug,
+  handleNavigate,
 }) => {
+  const location = useLocation()
+  console.log(location.pathname)
+
   return (
     <div className='max-w-[25rem] overflow-hidden shadow-lg rounded-lg flex flex-col cursor-pointer'>
       <div className='relative w-full xl:h-[12rem] lg:h-[13rem] max-lg:h-[12rem] overflow-hidden object-cover object-center'>
@@ -25,9 +30,19 @@ const BlogCard = ({
         <h2 className='font-semibold text-sm md:text-xl mb-3'>{title}</h2>
         <div className='flex-grow'></div>{' '}
         <div className='mt-2'>
-          <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'>
-            Check »
-          </span>
+          {location.pathname === '/published' && (
+            <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'>
+              <a href={`https://wiseadvice.in/${slug}`} target='__blank'>
+                Check »
+              </a>
+            </span>
+          )}
+
+          {location.pathname === '/drafts' && (
+            <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'>
+              <a href={`/write/${slug}`}>Edit »</a>
+            </span>
+          )}
         </div>
       </div>
 
