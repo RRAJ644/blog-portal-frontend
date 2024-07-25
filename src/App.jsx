@@ -8,6 +8,7 @@ import Write from './pages/Write'
 import { EditorProvider } from './context/EditorContext'
 import Published from './pages/Published'
 import Drafts from './pages/Drafts'
+import Edit from './pages/Edit'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route path='/write' element={<Layout><Write /></Layout>} />
             <Route path='/published' element={<Layout> <Published /> </Layout>} />
             <Route path='/drafts' element={<Layout><Drafts /></Layout>} />
+            <Route path='/edit/:id' element={<Layout><Edit /></Layout>} />
           </Routes>
         </EditorProvider>
       </AuthProvider>

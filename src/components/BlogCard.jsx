@@ -1,4 +1,6 @@
 import { useLocation } from 'react-router-dom'
+import axiosInstance from '../utils/axiosInstance'
+import { useState } from 'react'
 const BlogCard = ({
   thumbnail,
   date,
@@ -7,10 +9,14 @@ const BlogCard = ({
   tag,
   index,
   slug,
-  handleNavigate,
+  id,
 }) => {
-  const location = useLocation()
-  console.log(location.pathname)
+
+  const handleEdit = async () => {
+    const response = await axiosInstance.put(`/edit/${id}`, {
+      params: { id },
+    })
+  }
 
   return (
     <div className='max-w-[25rem] overflow-hidden shadow-lg rounded-lg flex flex-col cursor-pointer'>
@@ -39,8 +45,11 @@ const BlogCard = ({
           )}
 
           {location.pathname === '/drafts' && (
-            <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'>
-              <a href={`/write/${slug}`}>Edit »</a>
+            <span
+              className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'
+              onClick={() => handleEdit(slug)}
+            >
+              <a href={`edit/${id}`}>Edit »</a>
             </span>
           )}
         </div>

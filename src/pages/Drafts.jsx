@@ -23,7 +23,7 @@ const Drafts = () => {
     }
 
     getDrafts()
-  }, [])
+  }, [drafts])
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
@@ -34,7 +34,7 @@ const Drafts = () => {
       <h1 className='text-2xl font-bold mb-4 text-center'>Your Drafts</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {drafts.map(
-          ({ thumbnail, date, title, description, tag, index, slug }) => (
+          ({ thumbnail, date, title, description, tag, index, slug, _id }) => (
             <BlogCard
               key={slug}
               thumbnail={thumbnail}
@@ -44,6 +44,7 @@ const Drafts = () => {
               tag={tag}
               index={index}
               slug={slug}
+              id={_id}
             />
           )
         )}
