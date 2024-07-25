@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEditor } from '../context/EditorContext'
 import { Button, Tabs, Tab, TextField } from '@mui/material'
 import Preview from './Preview'
 import axiosInstance from '../utils/axiosInstance'
+import { useLocation } from 'react-router-dom'
 
 const modules = {
   toolbar: [
@@ -56,13 +57,32 @@ const applyCustomClasses = (selector, classNames) => {
 }
 
 const Write = () => {
+  const location = useLocation()
+  const editPath = location?.pathname?.split('/')[1] === 'edit'
+
   const { editorContent, setEditorContent } = useEditor()
   const [content, setContent] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
-  const [thumbnail, setThumbnail] = useState(null)
+  const [thumbnail, setThumbnail] = useState('')
   const [thumbnailPreview, setThumbnailPreview] = useState(null)
+
+  useEffect(() => {
+    const handleGet = async () => {
+      const response = await axiosInstance.get(
+        `/blog/${location?.pathname?.split('edit/')[1]}`
+      )
+      const { title, slug, thumbnail, description } = response?.data
+      setTitle(title)
+      setThumbnail(thumbnail)
+      setSlug(slug)
+      setEditorContent(description)
+      setThumbnailPreview(thumbnail)
+    }
+
+    editPath && handleGet()
+  }, [])
 
   const handleSave = () => {
     const formData = new FormData()
@@ -105,9 +125,9 @@ const Write = () => {
       formData.append('thumbnail', thumbnail)
     }
 
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
-    }
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`)
+    // }
 
     try {
       const response = await axiosInstance.post('/publish', formData, {
