@@ -11,11 +11,20 @@ const BlogCard = ({
   slug,
   id,
 }) => {
+  const handlePublishDraft = async () => {
+    try {
+      await axiosInstance.put(`/publish-draft/${id}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  const handleEdit = async () => {
-    const response = await axiosInstance.put(`/edit/${id}`, {
-      params: { id },
-    })
+  const handleDeleteDraft = async () => {
+    try {
+      await axiosInstance.delete(`/delete/${id}`)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -45,12 +54,18 @@ const BlogCard = ({
           )}
 
           {location.pathname === '/drafts' && (
-            <span
-              className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'
-              onClick={() => handleEdit(slug)}
-            >
-              <a href={`edit/${id}`}>Edit »</a>
-            </span>
+            <div className='flex justify-between'>
+              <span
+                className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'
+                // onClick={() => handleEdit(slug)}
+              >
+                <a href={`edit/${id}`}>Edit »</a>
+              </span>
+
+              <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'>
+                <a onClick={handlePublishDraft}>Publish »</a>
+              </span>
+            </div>
           )}
         </div>
       </div>
@@ -58,6 +73,9 @@ const BlogCard = ({
       <hr className='border-gray-300' />
       <div className='text-gray-600 text-sm px-6 py-4 flex justify-between'>
         <span>{date}</span>
+        <a className='text-red-500' onClick={handleDeleteDraft}>
+          Delete
+        </a>
       </div>
     </div>
   )
