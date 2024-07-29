@@ -507,14 +507,13 @@
 
 // export default Write
 
-// Write.js
 import { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEditor } from '../context/EditorContext'
 import { Button, Tabs, Tab, TextField } from '@mui/material'
 import axiosInstance from '../utils/axiosInstance'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Preview from './Preview'
 
 const modules = {
@@ -569,8 +568,12 @@ const applyCustomClasses = (selector, classNames) => {
 const Write = ({ editID }) => {
   const location = useLocation()
   const [tabIndex, setTabIndex] = useState(0)
+  const navigate = useNavigate()
 
   const editPath = location?.pathname?.split('/')[1] === 'edit'
+
+  console.log(editPath, '=====editPath', editID)
+
   const {
     editorContent,
     setEditorContent,
@@ -586,6 +589,7 @@ const Write = ({ editID }) => {
 
   useEffect(() => {
     if (editPath && editID) {
+      console.log('in it')
       const handleGet = async () => {
         const response = await axiosInstance.get(`/blog/${editID}`)
         const { title, slug, thumbnail, description } = response?.data
@@ -596,16 +600,25 @@ const Write = ({ editID }) => {
         setThumbnailPreview(thumbnail)
       }
       handleGet()
+    } else {
     }
   }, [
-    editPath,
     editID,
+    editPath,
     setEditorContent,
     setSlug,
     setThumbnail,
     setTitle,
     setThumbnailPreview,
   ])
+
+  useEffect(() => {
+    setTitle('')
+    setThumbnail('')
+    setSlug('')
+    setEditorContent('')
+    setThumbnailPreview('')
+  }, [editID, editPath])
 
   const handleSaveAsDraft = async () => {
     const formData = new FormData()

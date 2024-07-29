@@ -21,7 +21,7 @@ const Edit = () => {
 
   return (
     <div>
-      <Write blog={blog} editID={blog._id} />
+      <Write editID={blog._id} />
     </div>
   )
 }
