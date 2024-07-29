@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
+import { Modal, Box, Typography, Button } from '@mui/material'
+
 const BlogCard = ({
   thumbnail,
   date,
@@ -13,6 +16,8 @@ const BlogCard = ({
   published,
   setPublished,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const handlePublishDraft = async () => {
     try {
       await axiosInstance.put(`/publish-draft/${id}`)
@@ -41,9 +46,18 @@ const BlogCard = ({
           publishedDrafts.filter((published) => published._id !== id)
         )
       }
+      setIsModalOpen(false) // Close the modal after deleting
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -89,10 +103,66 @@ const BlogCard = ({
       <hr className='border-gray-300' />
       <div className='text-gray-600 text-sm px-6 py-4 flex justify-between'>
         <span>{date}</span>
-        <a className='text-red-500' onClick={handleDeleteDraft}>
+        <a
+          className='text-red-500'
+          onClick={() => setIsModalOpen(!isModalOpen)}
+        >
           Delete
         </a>
       </div>
+
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        aria-labelledby='modal-title'
+        aria-describedby='modal-description'
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 600,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography
+            id='modal-title'
+            variant='h3'
+            component='h2'
+            textAlign={'center'}
+            color={'red'}
+          >
+            Confirm Deletion
+          </Typography>
+          <Typography
+            id='modal-description'
+            sx={{ mt: 2 }}
+            variant='h4'
+            textAlign={'center'}
+          >
+            {published &&
+              'Are you sure you want to delete this blog from the live website?'}
+            {drafts && 'Delete from Drafts'}
+          </Typography>
+          <Box mt={4} display='flex' justifyContent='center'>
+            <Button variant='outlined' onClick={closeModal} sx={{ mr: 2 }}>
+              No
+            </Button>
+            <Button
+              variant='contained'
+              color='error'
+              onClick={handleDeleteDraft}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </div>
   )
 }
