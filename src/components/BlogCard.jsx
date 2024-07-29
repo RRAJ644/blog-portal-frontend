@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import { Modal, Box, Typography, Button } from '@mui/material'
+import { formatDate } from '../utils/formatDate'
 
 const BlogCard = ({
   thumbnail,
@@ -46,7 +47,7 @@ const BlogCard = ({
           publishedDrafts.filter((published) => published._id !== id)
         )
       }
-      setIsModalOpen(false) // Close the modal after deleting
+      setIsModalOpen(false)
     } catch (error) {
       console.log(error)
     }
@@ -102,15 +103,15 @@ const BlogCard = ({
 
       <hr className='border-gray-300' />
       <div className='text-gray-600 text-sm px-6 py-4 flex justify-between'>
-        <span>{date}</span>
-        {drafts && (
+        <span>{formatDate(date)}</span>
+        {/* {drafts && ( */}
           <a
             className='text-red-500'
             onClick={() => setIsModalOpen(!isModalOpen)}
           >
             Delete
           </a>
-        )}
+        {/* )} */}
       </div>
 
       <Modal
