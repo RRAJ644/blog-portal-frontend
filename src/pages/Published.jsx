@@ -6,14 +6,10 @@ const Published = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-
-
   useEffect(() => {
     const getPublished = async () => {
       try {
-        const response = await axiosInstance.get('/blogs', {
-          params: { status: 'published' },
-        })
+        const response = await axiosInstance.get('/blogs?status=published')
         setPublished(response?.data)
       } catch (error) {
         setError('Failed to fetch drafts')
@@ -24,7 +20,7 @@ const Published = () => {
     }
 
     getPublished()
-  }, [])
+  }, [published])
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
@@ -35,7 +31,7 @@ const Published = () => {
       <h1 className='text-2xl font-bold mb-4 text-center'>Published blogs</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {published?.map(
-          ({ thumbnail, date, title, description, tag, index, slug }) => (
+          ({ thumbnail, date, title, description, tag, index, slug, _id }) => (
             <BlogCard
               key={slug}
               thumbnail={thumbnail}
@@ -45,6 +41,9 @@ const Published = () => {
               tag={tag}
               index={index}
               slug={slug}
+              id={_id}
+              setPublished={setPublished}
+              published={published}
             />
           )
         )}

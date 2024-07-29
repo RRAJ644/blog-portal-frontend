@@ -1,6 +1,4 @@
-import { useLocation } from 'react-router-dom'
 import axiosInstance from '../utils/axiosInstance'
-import { useState } from 'react'
 const BlogCard = ({
   thumbnail,
   date,
@@ -10,10 +8,19 @@ const BlogCard = ({
   index,
   slug,
   id,
+  drafts,
+  setDrafts,
+  published,
+  setPublished,
 }) => {
   const handlePublishDraft = async () => {
     try {
       await axiosInstance.put(`/publish-draft/${id}`)
+      if (drafts && setDrafts) {
+        setDrafts((prevDrafts) =>
+          prevDrafts.filter((draft) => draft._id !== id)
+        )
+      }
     } catch (error) {
       console.log(error)
     }
@@ -22,6 +29,18 @@ const BlogCard = ({
   const handleDeleteDraft = async () => {
     try {
       await axiosInstance.delete(`/delete/${id}`)
+
+      if (drafts && setDrafts) {
+        setDrafts((prevDrafts) =>
+          prevDrafts.filter((draft) => draft._id !== id)
+        )
+      }
+
+      if (published && setPublished) {
+        setPublished((publishedDrafts) =>
+          publishedDrafts.filter((published) => published._id !== id)
+        )
+      }
     } catch (error) {
       console.log(error)
     }
@@ -55,10 +74,7 @@ const BlogCard = ({
 
           {location.pathname === '/drafts' && (
             <div className='flex justify-between'>
-              <span
-                className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'
-                // onClick={() => handleEdit(slug)}
-              >
+              <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'>
                 <a href={`edit/${id}`}>Edit »</a>
               </span>
 
