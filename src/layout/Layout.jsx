@@ -116,7 +116,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import { NAV_ITEMS } from '../data'
 import ContextMenu from '../components/ContextMenu'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axiosInstance from '../utils/axiosInstance'
 
 const Layout = ({ children }) => {
@@ -146,7 +146,6 @@ const Layout = ({ children }) => {
       const response = await axiosInstance.get(`/search/?search=${searchQuery}`)
 
       if (setDrafts) {
-        console.log('=========')
         setDrafts(response.data)
       } else {
         console.log('object')
@@ -201,39 +200,41 @@ const Layout = ({ children }) => {
             </IconButton>
           </div>
 
-          <form onSubmit={handleSearchSubmit} className='flex items-center'>
-            <TextField
-              variant='outlined'
-              size='small'
-              placeholder='Search...'
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className='mr-4'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                width: '300px',
-                backgroundColor: 'white',
-                borderRadius: '4px',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'gray',
+          {location.pathname !== '/write' && (
+            <form onSubmit={handleSearchSubmit} className='flex items-center'>
+              <TextField
+                variant='outlined'
+                size='small'
+                placeholder='Search...'
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className='mr-4'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  width: '300px',
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'gray',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'black',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'black',
+                    },
                   },
-                  '&:hover fieldset': {
-                    borderColor: 'black',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'black',
-                  },
-                },
-              }}
-            />
-          </form>
+                }}
+              />
+            </form>
+          )}
 
           <ContextMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
         </header>
