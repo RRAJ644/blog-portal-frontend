@@ -572,8 +572,6 @@ const Write = ({ editID }) => {
 
   const editPath = location?.pathname?.split('/')[1] === 'edit'
 
-  console.log(editPath, '=====editPath', editID)
-
   const {
     editorContent,
     setEditorContent,
@@ -743,6 +741,23 @@ const Write = ({ editID }) => {
             formats={formats}
             className='w-full'
           />
+        </div>
+      )}
+
+      {tabIndex === 1 && (
+        <div className='border-2 border-gray-400 flex-1 w-full'>
+          {editorContent?.trim()?.length > 0 ? (
+            <Preview
+              tag={'CRYPTOCURRENCY'}
+              title={title}
+              content={editorContent}
+              thumbnail={thumbnailPreview}
+            />
+          ) : (
+            <p className='text-gray-500'>
+              Write in editor and save to preview...
+            </p>
+          )}
         </div>
       )}
 
