@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import BlogCard from '../components/BlogCard'
-import axios from 'axios'
 
 const Drafts = ({ drafts, setDrafts }) => {
   // const [drafts, setDrafts] = useState([])
@@ -12,8 +11,7 @@ const Drafts = ({ drafts, setDrafts }) => {
     const getDrafts = async () => {
       try {
         const response = await axiosInstance.get('/blogs?status=drafts')
-        console.log(response.data)
-        setDrafts(response.data)
+        setDrafts(response?.data)
       } catch (error) {
         setError('Failed to fetch drafts')
         console.log('Error fetching drafts:', error)
@@ -33,7 +31,7 @@ const Drafts = ({ drafts, setDrafts }) => {
     <div className='p-4'>
       <h1 className='text-2xl font-bold mb-4 text-center'>Your Drafts</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {drafts.length > 0 &&
+        {drafts?.length > 0 &&
           drafts?.map(
             ({
               thumbnail,

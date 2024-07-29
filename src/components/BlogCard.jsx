@@ -103,12 +103,14 @@ const BlogCard = ({
       <hr className='border-gray-300' />
       <div className='text-gray-600 text-sm px-6 py-4 flex justify-between'>
         <span>{date}</span>
-        <a
-          className='text-red-500'
-          onClick={() => setIsModalOpen(!isModalOpen)}
-        >
-          Delete
-        </a>
+        {drafts && (
+          <a
+            className='text-red-500'
+            onClick={() => setIsModalOpen(!isModalOpen)}
+          >
+            Delete
+          </a>
+        )}
       </div>
 
       <Modal
