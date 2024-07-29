@@ -3,8 +3,8 @@ import axiosInstance from '../utils/axiosInstance'
 import BlogCard from '../components/BlogCard'
 import axios from 'axios'
 
-const Drafts = () => {
-  const [drafts, setDrafts] = useState([])
+const Drafts = ({ drafts, setDrafts }) => {
+  // const [drafts, setDrafts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 

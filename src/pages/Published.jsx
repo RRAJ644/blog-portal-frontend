@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import BlogCard from '../components/BlogCard'
-const Published = () => {
-  const [published, setPublished] = useState([])
+const Published = ({ published, setPublished }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -20,7 +19,7 @@ const Published = () => {
     }
 
     getPublished()
-  }, [published])
+  }, [])
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>{error}</div>
