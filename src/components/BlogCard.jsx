@@ -79,13 +79,13 @@ const BlogCard = ({
         <h2 className='font-semibold text-sm md:text-xl mb-3'>{title}</h2>
         <div className='flex-grow'></div>{' '}
         <div className='mt-2'>
-          {location.pathname === '/published' && (
+          {/* {location.pathname === '/published' && (
             <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer'>
               <a href={`https://wiseadvice.in/${slug}`} target='__blank'>
                 Check »
               </a>
             </span>
-          )}
+          )} */}
           {location.pathname === '/drafts' && (
             <div className='flex justify-between'>
               <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'>
