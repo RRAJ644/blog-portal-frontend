@@ -86,7 +86,6 @@ const BlogCard = ({
               </a>
             </span>
           )}
-
           {location.pathname === '/drafts' && (
             <div className='flex justify-between'>
               <span className='text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer text-xl'>
