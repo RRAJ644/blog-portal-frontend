@@ -515,6 +515,7 @@ import { Button, Tabs, Tab, TextField } from '@mui/material'
 import axiosInstance from '../utils/axiosInstance'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Preview from './Preview'
+import { applyEditorStyles } from '../utils/applyCustomClasses'
 
 const modules = {
   toolbar: [
@@ -569,6 +570,7 @@ const Write = ({ editID }) => {
   const location = useLocation()
   const [tabIndex, setTabIndex] = useState(0)
   const navigate = useNavigate()
+  const [sameDraftId, setSameDraftId] = useState(null)
 
   const editPath = location?.pathname?.split('/')[1] === 'edit'
 
@@ -587,7 +589,6 @@ const Write = ({ editID }) => {
 
   useEffect(() => {
     if (editPath && editID) {
-      console.log('in it')
       const handleGet = async () => {
         const response = await axiosInstance.get(`/blog/${editID}`)
         const { title, slug, thumbnail, description } = response?.data
@@ -626,17 +627,21 @@ const Write = ({ editID }) => {
     if (thumbnail) {
       formData.append('thumbnail', thumbnail)
     }
-
     try {
       let response
-      if (editID) {
-        response = await axiosInstance.put(`/edit/${editID}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
+      if (editID || sameDraftId) {
+        response = await axiosInstance.put(
+          `/edit/${editID || sameDraftId}`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        )
       } else {
         response = await axiosInstance.post('/save-as-draft', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
+        setSameDraftId(response?.data?._id)
       }
       console.log('Draft saved:', response.data)
     } catch (error) {
@@ -661,26 +666,11 @@ const Write = ({ editID }) => {
     setThumbnailPreview(null)
   }
 
+
   useEffect(() => {
     const quillEditor = document.querySelector('.ql-editor')
     if (quillEditor) {
-      applyCustomClasses('.ql-editor', [
-        'prose-customParagraph',
-        'max-lg:text-xl',
-        'max-sm:text-lg',
-      ])
-      applyCustomClasses('h2, h3', [
-        'prose-customHeading',
-        'max-lg:text-center',
-        'max-lg:text-2xl',
-        'max-sm:text-xl',
-      ])
-      applyCustomClasses('p, li', [
-        'prose-customParagraph',
-        'max-lg:text-xl',
-        'max-sm:text-lg',
-      ])
-      applyCustomClasses('img', ['mx-auto', 'block'])
+      applyEditorStyles()
     }
   }, [editorContent])
 
@@ -766,7 +756,7 @@ const Write = ({ editID }) => {
           editorContent !==
             '<p class="prose-customParagraph max-lg:text-xl max-sm:text-lg"><br></p>' && (
             <Button onClick={handleSaveAsDraft} variant='contained'>
-              {editID ? 'Save' : 'Draft'}
+              {editID || sameDraftId ? 'Save' : 'Draft'}
             </Button>
           )}
       </div>

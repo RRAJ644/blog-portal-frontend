@@ -1,6 +1,13 @@
+import { useEffect } from 'react'
 import profile from '../assets/blog-profile.webp'
 import { formatDate } from '../utils/formatDate'
+import { applyEditorStyles } from '../utils/applyCustomClasses'
 const Preview = ({ tag, title, content, thumbnail }) => {
+
+  useEffect(() => {
+    applyEditorStyles()
+  }, [content])
+
   return (
     <section className='flex flex-col items-center mt-8'>
       {tag && (
@@ -19,7 +26,7 @@ const Preview = ({ tag, title, content, thumbnail }) => {
           <img src={profile} alt='profile' className='rounded-full w-12 h-12' />
           <span>WISEADVICE</span>
         </div>
-        <h3 className='text-lg'>{formatDate(new Date())}</h3>
+        <h4 className='text-lg'>{formatDate(new Date())}</h4>
       </div>
 
       <div className='w-11/12 md:w-1/2 flex justify-center items-center'>
