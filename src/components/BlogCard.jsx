@@ -61,6 +61,8 @@ const BlogCard = ({
     setIsModalOpen(false)
   }
 
+
+
   return (
     <div className='max-w-[25rem] overflow-hidden shadow-lg rounded-lg flex flex-col cursor-pointer'>
       <div className='relative w-full xl:h-[12rem] lg:h-[13rem] max-lg:h-[12rem] overflow-hidden object-cover object-center'>
@@ -104,14 +106,13 @@ const BlogCard = ({
       <div className='text-gray-600 text-sm px-6 py-4 flex justify-between'>
         <span>{formatDate(date)}</span>
 
-        {drafts && (
-          <a
-            className='text-red-500'
-            onClick={() => setIsModalOpen(!isModalOpen)}
-          >
-            Delete
-          </a>
-        )}
+        <a
+          className='text-red-500'
+          onClick={() => setIsModalOpen(!isModalOpen)}
+        >
+          Delete
+        </a>
+        
       </div>
 
       <Modal
